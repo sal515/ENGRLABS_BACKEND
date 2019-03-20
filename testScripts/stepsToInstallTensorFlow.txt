@@ -1,0 +1,28 @@
+Installation of dependencies for Tensorflow
+1. Create Follow the object detection guide : https://cloud.google.com/solutions/creating-object-detection-application-tensorflow
+
+2. Don't install flask
+
+3. The tensorflow installation will fail in the last step
+	All the collected packages that tensorflow tries to install : 
+	Installing collected packages: six, numpy, keras-preprocessing, absl-py, futures, grpcio, markdown, werkzeug, wheel, 
+	setuptools, protobuf, tensorboard, h5py, keras-applications, gast, termcolor, backports.weakref, astor, funcsigs, 
+	pbr, mock, tensorflow-estimator, tensorflow
+	
+4. Install TensorFlow for ARM by going to : https://www.tensorflow.org/install/pip?lang=python2
+
+5. Use the following command to install the tensorflow library to avoid memory error (taking a long time 20m+ because of h5py was breaking!):   
+		pip install --no-cache-dir --user --upgrade tensorflow
+6. // pip install --no-cache-dir --upgrade https://www.piwheels.org/simple/tensorflow/tensorflow-1.13.1-cp27-none-linux_armv7l.whl
+
+7. 
+
+8. Install h5py separately if it breaks: instllation code: sudo apt-get install python-h5py
+
+9. Install hdf5 header must (to save billions of minutes): sudo apt-get install libhdf5-dev
+
+10.
+
+11.
+
+12.
