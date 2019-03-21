@@ -215,15 +215,18 @@ def saveJson2Db(jsonFilePath, privateKeyPath):
 
     # loop through every lab key and saving that lab to database
     for key in labKeys:
-        # print(key)
         if key in allLabsWithCoursesDict:
-            # doc_ref.set({
-            doc_ref.update({
-                unicode(key): {
-                    unicode(unicode("DynamicDataDict")): allLabsWithCoursesDict[key][u"DynamicDataDict"],
-                    unicode("CoursesDict"): allLabsWithCoursesDict[key]["CoursesDict"]
-                }
-            })
+            if key.isalnum():
+                # if not (key == "Building CodeRoom"):
+                print(key)
+                print(type(key))
+                ### doc_ref.set({
+                doc_ref.update({
+                    unicode(key): {
+                        unicode(unicode("DynamicDataDict")): allLabsWithCoursesDict[key][u"DynamicDataDict"],
+                        unicode("CoursesDict"): allLabsWithCoursesDict[key]["CoursesDict"]
+                    }
+                })
 
 
 # store IEEE as a lab separately
