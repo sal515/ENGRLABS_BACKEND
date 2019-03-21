@@ -141,7 +141,8 @@ def saveJson2Db(jsonFilePath, privateKeyPath):
                         u"RoomCode": unicode(item["RoomCode"]),
                         u"BuildingCode": unicode(item["BuildingCode"]),
                         u"Room": unicode(item["Room"]),
-                        u"LocationCode": unicode(item["LocationCode"])
+                        u"LocationCode": unicode(item["LocationCode"]),
+                        u'timestamp': firestore.SERVER_TIMESTAMP
                     },
                     unicode("CurrentSemesterCourses"):
                         {
@@ -278,7 +279,8 @@ def storeIEEELABDetails():
                 u"RoomCode": unicode(labTag),
                 u"BuildingCode": unicode(building),
                 u"Room": unicode(room),
-                u"LocationCode": unicode("Bannex")
+                u"LocationCode": unicode("Bannex"),
+                u'timestamp': firestore.SERVER_TIMESTAMP
             },
             unicode("CurrentSemesterCourses"): {}
         }
@@ -376,7 +378,8 @@ def addAlwaysAvailableLabs():
                     u"RoomCode": unicode(labTag),
                     u"BuildingCode": unicode(building),
                     u"Room": unicode(room),
-                    u"LocationCode": unicode(LocationCode)
+                    u"LocationCode": unicode(LocationCode),
+                    u'timestamp': firestore.SERVER_TIMESTAMP
                 },
                 unicode("CurrentSemesterCourses"): {}
             }

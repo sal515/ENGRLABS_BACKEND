@@ -20,15 +20,24 @@ import base64
 import cStringIO
 import sys
 import tempfile
+# from pyparsing import unicode
+import pyparsing
+
+
+
+
+# Firebase admin sdk imports to connect to the databse
+import firebase_admin
+from firebase_admin import credentials, firestore
 
 # adding model base path
-# adding the system variables with the directories
+# adding the system variables with the directories, then do the imports below
 MODEL_BASE = '/opt/models/research'
 sys.path.append(MODEL_BASE)
 sys.path.append(MODEL_BASE + '/object_detection')
 sys.path.append(MODEL_BASE + '/slim')
 
-# tensorflow imports
+# tensorflow imports must be called after the system paths has been set
 import numpy as np
 from PIL import Image
 from PIL import ImageDraw
@@ -139,7 +148,8 @@ def detect_objects_count_people(orig_image_path, new_image_path):
     # looping through all the detections that occured in the image to find people that were detected
     for i in range(num_detections):
         # score is for how good is the accuracy of the detection
-        if scores[i] < 0.6: continue
+        if scores[i] < 0.6:
+            continue
         cls = classes[i]
         # cls == 1 --> is for detecting people; so we only draw boxes on people in the for loop
         if cls == 1:
@@ -151,53 +161,64 @@ def detect_objects_count_people(orig_image_path, new_image_path):
 
     # print(peopleCounter)
 
-    return peopleCounter
+    return str(peopleCounter)
 
 
-import firebase_admin
-from firebase_admin import credentials, firestore
+def connect2Database(numberOfPeople):
+    # variables declartion
+    global LabAvailable, AvailableSpots
 
-
-def connect2Database():
+    # database connection setup variables
     cred = credentials.Certificate('engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json')
     default_app = firebase_admin.initialize_app(cred)
     db = firestore.client()
 
     # writing to the database examples
-
-    building = "H"
-    roomCode = "835"
-
-    doc_ref = db.collection(u'sampleDa').document(u'inspiration')
+    doc_ref = db.collection(u'PUBLIC_DATA').document(u"Labs")
     #  the .set is used to add or overwrite documents
     #  the .update function is used to update a document
     # doc_ref.set({
     # })
-    # doc_ref.update({
-    # })
-    # doc_ref.set({
-    #     unicode(building + roomCode): {
-    #         u'building': unicode(unicode(building)),
-    #         u'roomCode': unicode(unicode(roomCode))
-    #         # u'building': u"H",
-    #         # u'roomCode': u"835"
-    #     }
-    # })
-
 
     # reading data from the database examples
-
-
     try:
         doc = doc_ref.get()
-        print(u'Document data: {}'.format(doc.to_dict()))
+        docDict = doc.to_dict()
+
+        TotalCapacity = (docDict[u"IEEELab"][u"DynamicData"][u"TotalCapacity"])
+        AvailableSpots = int(TotalCapacity) - int(numberOfPeople)
+        LabAvailable = "Available"
+        if AvailableSpots <= 0:
+            AvailableSpots = "0"
+            LabAvailable = "Full"
+        # print(u'Document data: {}'.format(doc.to_dict()))
     except:
         print(u'No such document found')
 
+    doc_ref.update({
+        u"IEEELab.DynamicData.NumberOfStudentsPresent": unicode(numberOfPeople),
+        u"IEEELab.DynamicData.AvailableSpots": unicode(str(AvailableSpots)),
+        u"IEEELab.DynamicData.LabAvailable": unicode(LabAvailable)
+    })
+
+
+
+
+
+
+
+
+
+# ***** main ******
+
 # imageReadFunc()
-# client = ObjectDetector()
-# detect_objects_count_people("/home/salman_rahman515/TestingImageRead/demo-image1.jpg",
-#                             '/home/salman_rahman515/TestingImageRead/personDetected.png')
+client = ObjectDetector()
+numberOfPeople = detect_objects_count_people("/home/salman_rahman515/TestingImageRead/demo-image1.jpg",
+                                             '/home/salman_rahman515/TestingImageRead/personDetected.png')
+
+# numberOfPeople = "10"
+connect2Database(numberOfPeople)
+# ***** main ******
 
 
-connect2Database()
+# ============= Test or Example Functions below ==========================
