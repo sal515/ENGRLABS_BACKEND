@@ -126,6 +126,7 @@ def saveJson2Db(jsonFilePath, privateKeyPath):
                 {
                     unicode(unicode("DynamicData")): {
                         u"NumberOfStudentsPresent": unicode("??SensorNotSetup??"),
+                        u"LabAvailable": unicode("??SensorNotSetup??"),
                         u"Temperature": unicode("??SensorNotSetup??"),
                         u"TotalCapacity": unicode(item["EstimatedCapacity"]),
                         u"AvailableSpots": unicode("AvailableSpotsVal"),
@@ -136,7 +137,11 @@ def saveJson2Db(jsonFilePath, privateKeyPath):
                             unicode("StartHour"): unicode("HourVal"),
                             unicode("StartMin"): unicode("MinVal"),
                             unicode("StartSec"): unicode("SecVal")
-                        }
+                        },
+                        u"RoomCode": unicode(item["RoomCode"]),
+                        u"BuildingCode": unicode(item["BuildingCode"]),
+                        u"Room": unicode(item["Room"]),
+                        u"LocationCode": unicode(item["LocationCode"])
                     },
                     unicode("CurrentSemesterCourses"):
                         {
@@ -236,6 +241,19 @@ def storeIEEELABDetails():
     # default_app = firebase_admin.initialize_app(cred)
     # db = firestore.client()
 
+    labTag = "B204"
+    labTag = labTag.upper()
+
+    building = ''
+    building = building.join(char for char in labTag if char.isalpha())
+    room = ''
+    room = room.join(char for char in labTag if char.isnumeric())
+
+    # print(building)
+    # print(room)
+    # print(''.join(char for char in labTag if char.isalpha()))
+    # print(''.join(char for char in labTag if char.isnumeric()))
+
     # creating a collection and a document with the lab key tag
     doc_ref = db.collection(u'PUBLIC_DATA').document(u"Labs")
     # doc_ref.set({
@@ -245,6 +263,7 @@ def storeIEEELABDetails():
 
             unicode(unicode("DynamicData")): {
                 u"NumberOfStudentsPresent": unicode("??SensorNotSetup??"),
+                u"LabAvailable": unicode("??SensorNotSetup??"),
                 u"Temperature": unicode("??SensorNotSetup??"),
                 u"TotalCapacity": unicode(10),
                 u"AvailableSpots": unicode("AvailableSpotsVal"),
@@ -255,12 +274,114 @@ def storeIEEELABDetails():
                     unicode("StartHour"): unicode("NA"),
                     unicode("StartMin"): unicode("NA"),
                     unicode("StartSec"): unicode("NA")
-                }
+                },
+                u"RoomCode": unicode(labTag),
+                u"BuildingCode": unicode(building),
+                u"Room": unicode(room),
+                u"LocationCode": unicode("Bannex")
             },
             unicode("CurrentSemesterCourses"): {}
         }
 
     })
+
+
+def addAlwaysAvailableLabs():
+    # setting up databse credentials
+    # cred = credentials.Certificate(privateKeyPath)
+    # default_app = firebase_admin.initialize_app(cred)
+    # db = firestore.client()
+
+    alwaysAvailableLabs = [
+        {
+            u"labtag": u"h807",
+            u'TotalCapacity': u"20"
+        },
+        {
+            u"labtag": u"h815",
+            u"TotalCapacity": u"16"
+        },
+        {
+            u"labtag": u"h837",
+            u"TotalCapacity": u"20"
+        },
+        {
+            u"labtag": u"h841",
+            u"TotalCapacity": u"16"
+        },
+        {
+            u"labtag": u"h849",
+            u"TotalCapacity": u"20"
+        },
+        {
+            u"labtag": u"h905",
+            u"TotalCapacity": u"30"
+        },
+        {
+            u"labtag": u"h915",
+            u"TotalCapacity": u"50"
+        },
+        {
+            u"labtag": u"h928",
+            u"TotalCapacity": u"20"
+        },
+        {
+            u"labtag": u"h931",
+            u"TotalCapacity": u"50"
+        },
+        {
+            u"labtag": u"h933",
+            u"TotalCapacity": u"40"
+        }
+    ]
+
+    # # creating a collection and a document with the lab key tag
+    doc_ref = db.collection(u'PUBLIC_DATA').document(u"Labs")
+
+    for item in alwaysAvailableLabs:
+        # print(item)
+
+        labTag = item["labtag"]
+        labTag = labTag.upper()
+
+        building = ''
+        building = building.join(char for char in labTag if char.isalpha())
+        room = ''
+        room = room.join(char for char in labTag if char.isnumeric())
+
+        TotalCapacity = item["TotalCapacity"]
+        if building == "H" or building:
+            LocationCode = "SGW"
+        else:
+            LocationCode = ""
+
+        doc_ref.update({
+
+            unicode(labTag): {
+
+                unicode(unicode("DynamicData")): {
+                    u"NumberOfStudentsPresent": unicode("??SensorNotSetup??"),
+                    u"LabAvailable": unicode("Available"),
+                    u"Temperature": unicode("??SensorNotSetup??"),
+                    u"TotalCapacity": unicode(TotalCapacity),
+                    u"AvailableSpots": unicode("AvailableSpotsVal"),
+                    u"UpcommingClass": {
+                        unicode("Subject"): unicode("NA"),
+                        unicode("Category"): unicode("NA"),
+                        unicode("Title"): unicode("NA"),
+                        unicode("StartHour"): unicode("NA"),
+                        unicode("StartMin"): unicode("NA"),
+                        unicode("StartSec"): unicode("NA")
+                    },
+                    u"RoomCode": unicode(labTag),
+                    u"BuildingCode": unicode(building),
+                    u"Room": unicode(room),
+                    u"LocationCode": unicode(LocationCode)
+                },
+                unicode("CurrentSemesterCourses"): {}
+            }
+
+        })
 
 
 def datamodel():
@@ -281,13 +402,18 @@ def datamodel():
 db = initializeAppDatabase()
 # Parse the CSV to JSON
 generateJSONfromCSV(csvFilePath, jsonFilePath)
+# Adding the list of labs that doesn't have classes during the semester to the same document
+addAlwaysAvailableLabs()
 # Parse the JSON to Dictionaries and Store it in the database
 saveJson2Db(jsonFilePath, privateKeyPath)
+
+
 # Save IEEE as a Lab in the database
 storeIEEELABDetails()
 
+
 # TestPrint
-datamodel()
+# datamodel()
 
 
 # ***** END ******
