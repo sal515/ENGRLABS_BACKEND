@@ -124,7 +124,7 @@ def saveJson2Db(jsonFilePath, privateKeyPath):
         tempLabDict = {
             labKeys:
                 {
-                    unicode(unicode("DynamicDataDict")): {
+                    unicode(unicode("DynamicData")): {
                         u"NumberOfStudentsPresent": unicode("??SensorNotSetup??"),
                         u"Temperature": unicode("??SensorNotSetup??"),
                         u"TotalCapacity": unicode(item["EstimatedCapacity"]),
@@ -138,7 +138,7 @@ def saveJson2Db(jsonFilePath, privateKeyPath):
                             unicode("StartSec"): unicode("SecVal")
                         }
                     },
-                    unicode("CoursesDict"):
+                    unicode("CurrentSemesterCourses"):
                         {
                             unicode(unicode(item["Subject"]) + unicode(item["CatalogNbr"])): {}
                         }
@@ -202,7 +202,7 @@ def saveJson2Db(jsonFilePath, privateKeyPath):
         # if labKeys exit in the allLabsWithCoursesDict,
         # update the courses dict in the  allLabsWithCoursesDict with the courses in the temp dict
         if labKeys in allLabsWithCoursesDict:
-            allLabsWithCoursesDict[labKeys][u"CoursesDict"].update(tempLabDict[labKeys])
+            allLabsWithCoursesDict[labKeys][u"CurrentSemesterCourses"].update(tempLabDict[labKeys])
 
     # ================== Saving built object to databse =============================
 
@@ -218,13 +218,13 @@ def saveJson2Db(jsonFilePath, privateKeyPath):
         if key in allLabsWithCoursesDict:
             if key.isalnum():
                 # if not (key == "Building CodeRoom"):
-                print(key)
-                print(type(key))
+                # print(key)
+                # print(type(key))
                 ### doc_ref.set({
                 doc_ref.update({
                     unicode(key): {
-                        unicode(unicode("DynamicDataDict")): allLabsWithCoursesDict[key][u"DynamicDataDict"],
-                        unicode("CoursesDict"): allLabsWithCoursesDict[key]["CoursesDict"]
+                        unicode(unicode("DynamicData")): allLabsWithCoursesDict[key][u"DynamicData"],
+                        unicode("CurrentSemesterCourses"): allLabsWithCoursesDict[key]["CurrentSemesterCourses"]
                     }
                 })
 
@@ -243,7 +243,7 @@ def storeIEEELABDetails():
 
         u"IEEELab": {
 
-            unicode(unicode("DynamicDataDict")): {
+            unicode(unicode("DynamicData")): {
                 u"NumberOfStudentsPresent": unicode("??SensorNotSetup??"),
                 u"Temperature": unicode("??SensorNotSetup??"),
                 u"TotalCapacity": unicode(10),
@@ -257,19 +257,19 @@ def storeIEEELABDetails():
                     unicode("StartSec"): unicode("NA")
                 }
             },
-            unicode("CoursesDict"): {}
+            unicode("CurrentSemesterCourses"): {}
         }
 
     })
 
 
 def datamodel():
-    doc_ref = db.collection(u'PUBLIC_DATA').document(u"H821")
+    doc_ref = db.collection(u'PUBLIC_DATA').document(u"Labs")
     try:
         doc = doc_ref.get()
         testDict = doc.to_dict()
 
-        print(testDict[u"Subject"])
+        print(testDict)
         # print(u'Document data: {}'.format(doc.to_dict()))
 
     except:
@@ -286,9 +286,8 @@ saveJson2Db(jsonFilePath, privateKeyPath)
 # Save IEEE as a Lab in the database
 storeIEEELABDetails()
 
-
 # TestPrint
-# datamodel()
+datamodel()
 
 
 # ***** END ******
