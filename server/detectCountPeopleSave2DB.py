@@ -23,9 +23,14 @@ import tempfile
 # from pyparsing import unicode
 import pyparsing
 
+# Import gcloud
+from google.cloud import storage
 
-
-
+# Global Paths for the functions
+bucketname = 'engrlabs-10f0c.appspot.com'
+imageName = 'B204-snapshot.jpg'
+downloadPath = 'B204-snapshot.jpg'
+savePath = '/home/salman_rahman515/TestingImageRead/B204.png'
 # Firebase admin sdk imports to connect to the databse
 import firebase_admin
 from firebase_admin import credentials, firestore
@@ -202,23 +207,38 @@ def connect2Database(numberOfPeople):
     })
 
 
-
-
-
-
-
+def getImageFromFirestoreStorage(bucketName, imageName, downloadPath):
+    global client
+    # Enable Storage
+    client = storage.Client()
+    # Reference an existing bucket.
+    bucket = client.get_bucket(bucketName)
+    # Upload a local file to a new file to be created in your bucket.
+    # zebraBlob = bucket.get_blob('zebra.jpg')
+    # zebraBlob.upload_from_filename(filename='/photos/zoo/zebra.jpg')
+    # Download a file from your bucket.
+    readImageBlob = bucket.get_blob(imageName)
+    readImageBlob.download_to_filename(imageName)
+    # return readImageBlob.download_as_string()
+    # Downloadint the image to be passed to the object detection function
+    # return readImageBlob.download_to_file()
 
 
 # ***** main ******
+# download image from the firestore storage
+getImageFromFirestoreStorage(bucketname, imageName, downloadPath)
 
-# imageReadFunc()
+# initialize an object detector object to be used in the object detection functions
 client = ObjectDetector()
-numberOfPeople = detect_objects_count_people("/home/salman_rahman515/TestingImageRead/demo-image1.jpg",
-                                             '/home/salman_rahman515/TestingImageRead/personDetected.png')
+# numberOfPeople = detect_objects_count_people("/home/salman_rahman515/TestingImageRead/demo-image1.jpg",
+#                                              '/home/salman_rahman515/TestingImageRead/personDetected.png')
+# detect the number of people in the image downloaded
+numberOfPeople = detect_objects_count_people(downloadPath, savePath)
 
 # numberOfPeople = "10"
+# store the number of people in the image detected to the database
 connect2Database(numberOfPeople)
-# ***** main ******
+# ***** end ******
 
 
 # ============= Test or Example Functions below ==========================
