@@ -26,14 +26,17 @@ import pyparsing
 # Import gcloud
 from google.cloud import storage
 
+# Firebase admin sdk imports to connect to the databse
+import firebase_admin
+from firebase_admin import credentials, firestore
+
+
 # Global Paths for the functions
 bucketname = 'engrlabs-10f0c.appspot.com'
 imageName = 'B204-snapshot.jpg'
 downloadPath = 'B204-snapshot.jpg'
-savePath = '/home/salman_rahman515/TestingImageRead/B204.png'
-# Firebase admin sdk imports to connect to the databse
-import firebase_admin
-from firebase_admin import credentials, firestore
+# savePath = '/home/salman_rahman515/TestingImageRead/B204.png'
+savePath = 'B204.png'
 
 # adding model base path
 # adding the system variables with the directories, then do the imports below
@@ -171,7 +174,8 @@ def detect_objects_count_people(orig_image_path, new_image_path):
 
 def connect2Database(numberOfPeople):
     # variables declartion
-    global LabAvailable, AvailableSpots
+    LabAvailable = ""
+    AvailableSpots = ""
 
     # database connection setup variables
     cred = credentials.Certificate('engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json')
@@ -208,11 +212,10 @@ def connect2Database(numberOfPeople):
 
 
 def getImageFromFirestoreStorage(bucketName, imageName, downloadPath):
-    global client
     # Enable Storage
-    client = storage.Client()
+    googleStorageClient = storage.Client()
     # Reference an existing bucket.
-    bucket = client.get_bucket(bucketName)
+    bucket = googleStorageClient.get_bucket(bucketName)
     # Upload a local file to a new file to be created in your bucket.
     # zebraBlob = bucket.get_blob('zebra.jpg')
     # zebraBlob.upload_from_filename(filename='/photos/zoo/zebra.jpg')
@@ -224,20 +227,23 @@ def getImageFromFirestoreStorage(bucketName, imageName, downloadPath):
     # return readImageBlob.download_to_file()
 
 
+def main():
+    global client
+    # download image from the firestore storage
+    getImageFromFirestoreStorage(bucketname, imageName, downloadPath)
+    # initialize an object detector object to be used in the object detection functions
+    client = ObjectDetector()
+    # numberOfPeople = detect_objects_count_people("/home/salman_rahman515/TestingImageRead/demo-image1.jpg",
+    #                                              '/home/salman_rahman515/TestingImageRead/personDetected.png')
+    # detect the number of people in the image downloaded
+    numberOfPeople = detect_objects_count_people(downloadPath, savePath)
+    # numberOfPeople = "10"
+    # store the number of people in the image detected to the database
+    connect2Database(numberOfPeople)
+
+
 # ***** main ******
-# download image from the firestore storage
-getImageFromFirestoreStorage(bucketname, imageName, downloadPath)
-
-# initialize an object detector object to be used in the object detection functions
-client = ObjectDetector()
-# numberOfPeople = detect_objects_count_people("/home/salman_rahman515/TestingImageRead/demo-image1.jpg",
-#                                              '/home/salman_rahman515/TestingImageRead/personDetected.png')
-# detect the number of people in the image downloaded
-numberOfPeople = detect_objects_count_people(downloadPath, savePath)
-
-# numberOfPeople = "10"
-# store the number of people in the image detected to the database
-connect2Database(numberOfPeople)
+# main()
 # ***** end ******
 
 
