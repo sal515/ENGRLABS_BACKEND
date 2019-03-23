@@ -1,0 +1,7 @@
+cd "/home/salman_rahman515/ENGR390_ServerScripts/
+cp -a testFlaskApp/ /opt/
+cp /opt/testFlaskApp/engr-labs-390.service /etc/systemd/system/
+systemctl daemon-reload
+systemctl enable engr-labs-390.service
+systemctl start engr-labs-390.service
+systemctl status engr-labs-390.service
