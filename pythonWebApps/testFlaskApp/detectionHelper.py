@@ -31,12 +31,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 
 
-# Global Paths for the functions
-bucketname = 'engrlabs-10f0c.appspot.com'
-imageName = 'image.jpg'
-downloadPath = 'image.jpg'
-# savePath = '/home/salman_rahman515/TestingImageRead/B204.png'
-savePath = 'image.png'
+
 
 # adding model base path
 # adding the system variables with the directories, then do the imports below
@@ -122,27 +117,8 @@ def draw_bounding_box_on_image(image, box, color='red', thickness=4):
                (right, top), (left, top)], width=thickness, fill=color)
 
 
-# TEST FUNCTION BELOW:
-# def imageReadFunc():
-#     print("Reading Image")
-#
-#     # read the image
-#     img = Image.open('/home/salman_rahman515/TestingImageRead/demo-image1.jpg')
-#     # img = Image.open("demo-image1.jpg")
-#
-#     # output image
-#     img.show()
-#
-#     # printFormat of image
-#     print(img.format)
-#
-#     # print mode of the image
-#     print(img.mode)
-# TEST FUNCTION ABOVE:
-
-
 # essentially the main () for object detection
-def detect_objects_count_people(orig_image_path, new_image_path):
+def detect_objects_count_people(orig_image_path, new_image_path, client):
     # Results of the detection function are returned here
     image = Image.open(orig_image_path).convert('RGB')
     boxes, scores, classes, num_detections = client.detect(image)
@@ -226,7 +202,15 @@ def getImageFromFirestoreStorage(bucketName, imageName, downloadPath):
 
 
 def grabImage_objectDetection_save():
-    global client
+    # Global Paths for the functions
+    bucketname = 'engrlabs-10f0c.appspot.com'
+    imageName = 'image.jpg'
+    downloadPath = 'image.jpg'
+    # savePath = '/home/salman_rahman515/TestingImageRead/B204.png'
+    savePath = 'image.png'
+
+    # declarig global client object used in object detection functions
+    # global client
     # download image from the firestore storage
     getImageFromFirestoreStorage(bucketname, imageName, downloadPath)
     # initialize an object detector object to be used in the object detection functions
@@ -234,15 +218,9 @@ def grabImage_objectDetection_save():
     # numberOfPeople = detect_objects_count_people("/home/salman_rahman515/TestingImageRead/demo-image1.jpg",
     #                                              '/home/salman_rahman515/TestingImageRead/personDetected.png')
     # detect the number of people in the image downloaded
-    numberOfPeople = detect_objects_count_people(downloadPath, savePath)
+    numberOfPeople = detect_objects_count_people(downloadPath, savePath, client)
     # numberOfPeople = "10"
     # store the number of people in the image detected to the database
     updateDatabase(numberOfPeople)
 
 
-# ***** main ******
-# main()
-# ***** end ******
-
-
-# ============= Test or Example Functions below ==========================

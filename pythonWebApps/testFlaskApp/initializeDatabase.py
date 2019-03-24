@@ -7,11 +7,7 @@ from firebase_admin import credentials, firestore
 
 # from pyparsing import unicode
 
-# The private key is obtained from the web console - this key is for python sdk
-privateKeyPath = "engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json"
 
-csvFilePath = "labSchedulesRevised.csv"
-jsonFilePath = "openDataParsing.json"
 
 
 # to convert the json into objects
@@ -401,6 +397,13 @@ def datamodel(db):
 
 
 def initializeDatabase():
+    # The private key is obtained from the web console - this key is for python sdk
+    privateKeyPath = "engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json"
+
+    csvFilePath = "labSchedulesRevised.csv"
+    jsonFilePath = "openDataParsing.json"
+
+
     # global db
     # Initialize the app database
     db = connectAndCreateBlankCollectionAndDB()
@@ -417,7 +420,7 @@ def initializeDatabase():
 
 
 # ***** Main ******
-initializeDatabase()
+# initializeDatabase()
 # ***** END ******
 
 
