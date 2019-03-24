@@ -74,8 +74,6 @@ def logger(processingDetails):
         outfile.write(str(datetime.datetime.now().time()) + " " + str(processingDetails) + "\n")
 
 
-
-
 # # ------- main --------------------
 try:
 
