@@ -1,9 +1,9 @@
 [Unit]
-Description=Server Script Engr Labs 390 
+Description=Server Script 390 
 After=syslog.target network.target auditd.service
 
 [Service]
-ExecStart=/opt/testFlaskApp/app.py
+ExecStart=/usr/bin/python /opt/testFlaskApp/app.py
 ExecStop=/bin/kill -TERM $MAINPID
 
 [Install]

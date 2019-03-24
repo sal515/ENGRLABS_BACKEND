@@ -22,6 +22,6 @@ bucket = storage.bucket()
 # The following commented out code is to download and image from the web and store it to the cloud storage
 # imageData = requests.get(imgPath).content
 
-blob = bucket.blob('B204-snapshot.jpg')
+blob = bucket.blob('image.jpg')
 blob.upload_from_filename(imgPath, content_type='image/jpg')
 print(blob.public_url)
