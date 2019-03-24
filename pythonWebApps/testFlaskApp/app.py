@@ -472,7 +472,7 @@ def initializeDatabase():
     privateKeyPath = "/opt/testFlaskApp/engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json"
 
     csvFilePath = "/opt/testFlaskApp/labSchedulesRevised.csv"
-    jsonFilePath = "/opt/testFlaskApp/openDataParsing.json"
+    jsonFilePath = "/opt/testFlaskApp/results/openDataParsing.json"
 
     # global db
     # create default app as null
@@ -649,7 +649,7 @@ def getImageFromFirestoreStorage(bucketName, imageName, downloadPath):
     # zebraBlob.upload_from_filename(filename='/photos/zoo/zebra.jpg')
     # Download a file from your bucket.
     readImageBlob = bucket.get_blob(imageName)
-    readImageBlob.download_to_filename(imageName)
+    readImageBlob.download_to_filename(downloadPath)
     # return readImageBlob.download_as_string()
     # Downloadint the image to be passed to the object detection function
     # return readImageBlob.download_to_file()
@@ -659,9 +659,9 @@ def grabImage_objectDetection_save():
     # Global Paths for the functions
     bucketname = 'engrlabs-10f0c.appspot.com'
     imageName = 'image.jpg'
-    downloadPath = 'image.jpg'
+    downloadPath = '/opt/testFlaskApp/results/downloaded_image.jpg'
     # savePath = '/home/salman_rahman515/TestingImageRead/B204.png'
-    savePath = 'image.png'
+    savePath = '/opt/testFlaskApp/results/processed_image.png'
 
     privateKeyPath = "/opt/testFlaskApp/engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json"
 

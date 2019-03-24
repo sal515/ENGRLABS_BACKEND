@@ -1,0 +1,8 @@
+#* * * * * /usr/bin/python /home/pi/engrLabs_390_log_generator.py
+
+* * * * * /usr/bin/python /home/pi/object-detection-tensorFlow-openData/uploadImageFromRPI.py
+
+* * * * * /usr/bin/python /home/pi/uploadImageFromRPI.py
+
+
+* * * * * sh /home/pi/capture.sh
