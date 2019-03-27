@@ -14,6 +14,8 @@ from flask import request
 # importing script containing code to save parsed data to the database
 import parseNStore2DB
 
+# importing script containing computed results to the database
+import serverSideComputation
 
 app = Flask(__name__)
 
@@ -148,53 +150,52 @@ def detect_objects_count_people(orig_image_path, new_image_path, client):
             draw_bounding_box_on_image(new_image, boxes[i], thickness=int(scores[i] * 10) - 4)
 
         new_image.save(new_image_path)
-    # new_image.save('/home/salman_rahman515/TestingImageRead/personDetected.png')
 
+    # new_image.save('/home/salman_rahman515/TestingImageRead/personDetected.png')
     # print(peopleCounter)
 
     return str(peopleCounter)
 
 
-def updateDatabase(default_app, numberOfPeople, privateKeyPath):
-    # variables declartion
-    LabAvailable = ""
-    AvailableSpots = ""
-
-    try:
-        # database connection setup variables
-        cred = credentials.Certificate(privateKeyPath)
-        default_app = firebase_admin.initialize_app(cred)
-        db = firestore.client()
-    except ValueError:
-        db = firestore.client()
-
-    # writing to the database examples
-    doc_ref = db.collection(u'PUBLIC_DATA').document(u"Labs")
-    #  the .set is used to add or overwrite documents
-    #  the .update function is used to update a document
-    # doc_ref.set({
-    # })
-
-    # reading data from the database examples
-    try:
-        doc = doc_ref.get()
-        docDict = doc.to_dict()
-
-        TotalCapacity = (docDict[u"IEEELab"][u"DynamicData"][u"TotalCapacity"])
-        AvailableSpots = int(TotalCapacity) - int(numberOfPeople)
-        LabAvailable = "Available"
-        if AvailableSpots <= 0:
-            AvailableSpots = "0"
-            LabAvailable = "Full"
-        # print(u'Document data: {}'.format(doc.to_dict()))
-    except:
-        print(u'No such document found')
-
-    doc_ref.update({
-        u"IEEELab.DynamicData.NumberOfStudentsPresent": unicode(numberOfPeople),
-        u"IEEELab.DynamicData.AvailableSpots": unicode(str(AvailableSpots)),
-        u"IEEELab.DynamicData.LabAvailable": unicode(LabAvailable)
-    })
+#
+# def updateDatabase(default_app, numberOfPeople, privateKeyPath):
+#     # variables declartion
+#     LabAvailable = ""
+#     AvailableSpots = ""
+#
+#     # try:
+#     #     # database connection setup variables
+#     #     cred = credentials.Certificate(privateKeyPath)
+#     #     default_app = firebase_admin.initialize_app(cred)
+#     #     db = firestore.client()
+#     # except ValueError:
+#     #     db = firestore.client()
+#
+#     ref = parseNStore2DB.connectAndCreateBlankCollectionAndDB(privateKeyPath)
+#
+#     # writing to the database examples
+#     doc_ref = ref.child('PUBLIC_DATA/DynamicData/B204')
+#
+#     # reading data from the database examples
+#     try:
+#         doc = doc_ref.get()
+#         docDict = doc.to_dict()
+#
+#         TotalCapacity = (docDict[u"IEEELab"][u"DynamicData"][u"TotalCapacity"])
+#         AvailableSpots = int(TotalCapacity) - int(numberOfPeople)
+#         LabAvailable = "Available"
+#         if AvailableSpots <= 0:
+#             AvailableSpots = "0"
+#             LabAvailable = "Full"
+#         # print(u'Document data: {}'.format(doc.to_dict()))
+#     except:
+#         print(u'No such document found')
+#
+#     doc_ref.update({
+#        unicode("B204") : {
+#
+#        }
+#     })
 
 
 def getImageFromFirestoreStorage(bucketName, imageName, downloadPath):
@@ -237,8 +238,12 @@ def grabImage_objectDetection_save():
     # detect the number of people in the image downloaded
     numberOfPeople = detect_objects_count_people(downloadPath, savePath, client)
     # numberOfPeople = "10"
+
     # store the number of people in the image detected to the database
-    updateDatabase(default_app, numberOfPeople, privateKeyPath)
+    # requires importing serversideComputation file
+    # updateDatabase(default_app, numberOfPeople, privateKeyPath)
+    serverSideComputation.updateNumberOfPeopleAvailabilitySpots(numberOfPeople, privateKeyPath)
+    # serverSideComputation.serverSideComputation(numberOfPeople)
 
 
 # ================================================================================
