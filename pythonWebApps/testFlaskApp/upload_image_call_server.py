@@ -16,7 +16,6 @@ directory = "/home/pi/object-detection-tensorFlow-openData/"
 
 def captureImage():
     camera = PiCamera()
-    # camera.resolution = (640, 480)
     camera.resolution = (2592, 1944)
     camera.capture(str(directory) + 'image.jpg')
 
@@ -46,10 +45,7 @@ def connect2FirebaseStorageAndSave():
 
 def callServer():
     t0 = time.time()
-    # r = requests.get('http://34.73.44.43')
     r = requests.get('http://34.73.44.43/rpi/detectPeople')
-    # print(r.content)
-    # print(r.status_code)
     t1 = time.time()
     # print("total time : " + str(t1 - t0) + "s")
     return (str(t1 - t0) + "s")
