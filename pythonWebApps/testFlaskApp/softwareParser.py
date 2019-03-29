@@ -136,19 +136,25 @@ def parsingStep3(SoftwareAndClassList, debug, outputView):
 def convertingDataFromList2Dict(SoftwareAndClassList, softLabDict):
     for tempIndex in SoftwareAndClassList:
         arr = []
+        tempIndex.softwareName = str(tempIndex.softwareName).replace(".", "_")
         if str(tempIndex.softwareName) not in softLabDict:
             arr = [tempIndex]
-            tempIndex.classFloor = (str(tempIndex.classRoom).lstrip("0"))
-            tempIndex.classRoom = (str(tempIndex.classFloor).lstrip("0"))
+            tempIndex.classFloor = (str(tempIndex.classFloor).lstrip("0"))
+            # tempIndex.classRoom = (str(tempIndex.classRoom).lstrip("0"))
             softLabDict.update({str(tempIndex.softwareName): arr})
         else:
             arr = softLabDict.get(str(tempIndex.softwareName))
-            tempIndex.classFloor = (str(tempIndex.classRoom).lstrip("0"))
-            tempIndex.classRoom = (str(tempIndex.classFloor).lstrip("0"))
+            tempIndex.classFloor = (str(tempIndex.classFloor).lstrip("0"))
+            # tempIndex.classRoom = (str(tempIndex.classRoom).lstrip("0"))
             arr.append(tempIndex)
 
 
         # Testing String strippng
+        # print "software names " + tempIndex.softwareName
+        # replacedString = str(tempIndex.softwareName).replace(".", "_")
+        # print "software names stripped/replaced   " + replacedString
+
+
         # print "class room: " + tempIndex.classRoom
         # print "class room stripped: " + (str(tempIndex.classRoom).lstrip("0"))
 
@@ -164,7 +170,7 @@ def convertingDataFromList2Dict(SoftwareAndClassList, softLabDict):
 
 
 
-def main():
+def softwareParsingMain():
     fileName = 'input.txt'
     file = open(fileName, 'r')
     sourceCode = file.read()
