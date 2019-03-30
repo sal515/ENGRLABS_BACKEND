@@ -165,7 +165,7 @@ def convertingDataFromList2Dict(SoftwareAndClassList, softLabDict):
     return softLabDict
 
 def softwareParsingMain():
-    fileName = 'input.txt'
+    fileName = '/opt/testFlaskApp/input.txt'
     file = open(fileName, 'r')
     sourceCode = file.read()
 

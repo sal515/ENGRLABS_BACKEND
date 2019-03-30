@@ -283,7 +283,7 @@ def initializeDB():
     parseNStore2DB.initializeDatabase()
     # initializeDatabase()
     privateKeyPath = "/opt/testFlaskApp/engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json"
-    softwareParser.softwareParsingMain(privateKeyPath)
+    serverSideComputation.storeSoftwareLabs2DB(privateKeyPath)
     return render_template('home.html', varString="Database Initialization Complete")
 
 
