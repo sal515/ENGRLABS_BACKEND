@@ -17,6 +17,9 @@ import parseNStore2DB
 # importing script containing computed results to the database
 import serverSideComputation
 
+# importing software parsing script
+import softwareParser
+
 app = Flask(__name__)
 
 # ================================================================================
@@ -279,6 +282,8 @@ def initializeDB():
     # initializeDatabase.initializeDatabase()
     parseNStore2DB.initializeDatabase()
     # initializeDatabase()
+    privateKeyPath = "/opt/testFlaskApp/engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json"
+    softwareParser.softwareParsingMain(privateKeyPath)
     return render_template('home.html', varString="Database Initialization Complete")
 
 

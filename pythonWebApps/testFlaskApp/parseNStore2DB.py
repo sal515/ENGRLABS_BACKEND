@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 # ================================================================================
 #                       Imports --> Initialize database
 # ================================================================================
@@ -137,7 +140,7 @@ def generateJSONfromCSV(csvFilePath, jsonFilePath):
 
 
 # Reference: https://linuxconfig.org/how-to-parse-data-from-json-into-python
-def saveJson2Db(ref, jsonFilePath, privateKeyPath):
+def saveCurrentSemesterCoursesNDynamicData2DB(ref, jsonFilePath, privateKeyPath):
     # ================== Building object to save to databse =============================
 
     # parsing the json document to a dict
@@ -251,7 +254,7 @@ def saveJson2Db(ref, jsonFilePath, privateKeyPath):
     # creating a collection and a document with the lab key tag
     doc_ref = ref.child('PUBLIC_DATA/DynamicData')
 
-    # loop through every lab key and saving that lab to database
+    # loop through every lab key and saving that lab to database - dynamic data
     for key in labKeys:
         if key in allLabsWithCoursesDict:
             if key.isalnum():
@@ -266,7 +269,7 @@ def saveJson2Db(ref, jsonFilePath, privateKeyPath):
     # creating a collection and a document with the lab key tag
     doc_ref = ref.child('PUBLIC_DATA/CurrentSemesterCourses')
 
-    # loop through every lab key and saving that lab to database
+    # loop through every lab key and saving that lab to database - current semester courses
     for key in labKeys:
         if key in allLabsWithCoursesDict:
             if key.isalnum():
@@ -279,7 +282,105 @@ def saveJson2Db(ref, jsonFilePath, privateKeyPath):
                 })
 
 
-# store IEEE as a lab separately
+# Reference: https://linuxconfig.org/how-to-parse-data-from-json-into-python
+def saveCoursesWithLabs2DB(ref, jsonFilePath, privateKeyPath):
+    # ================== Building object to save to databse =============================
+
+    # parsing the json document to a dict
+    with open(jsonFilePath, 'r') as f:
+        # load json data as a dictionary
+        jsonObjects = json.load(f)
+
+    # variables used throughout this function
+    allCoursesNLabs = {}
+    courseKey = {}
+    courseKey = ""
+    tempDict = {}
+
+    ref_semester = ref.child('PUBLIC_DATA')
+
+    for object in jsonObjects:
+        courseKey = str(unicode(unicode(object["Subject"]) + "-" + unicode(object["CatalogNbr"]))).replace(" ", "-")
+        # print courseKey
+        # sectionKey = str(unicode(object["Section"])).replace(" ", "-")
+        # print sectionKey
+        # labKey = (unicode(unicode(object["BuildingCode"]) + unicode(object["Room"])))
+        # print labKey
+
+        tempDict = {
+            courseKey: {
+                u"Sections": {
+                    "null": "null"
+                }
+            }
+        }
+        allCoursesNLabs.update(tempDict)
+
+    for object in jsonObjects:
+        courseKey = str(unicode(unicode(object["Subject"]) + "-" + unicode(object["CatalogNbr"]))).replace(" ", "-")
+        # print courseKey
+        sectionKey = str(unicode(object["Section"])).replace(" ", "-")
+        labKey = (unicode(unicode(object["BuildingCode"]) + unicode(object["Room"])))
+
+        tempDict = {
+            sectionKey: {
+                u"RoomCode": unicode(labKey),
+                # u"SectionDetails": {
+                # u"CourseID": unicode(object["CourseID"]),
+                # u"TermCode": unicode(object["TermCode"]),
+                # u"TermDescr": unicode(object["TermDescr"]),
+                # u"Session": unicode(object["Session"]),
+                u"Subject": unicode(object["Subject"]),
+                u"CatalogNbr": unicode(object["CatalogNbr"]),
+                u"Section": unicode(object["Section"]),
+                u"ComponentCode": unicode(object["ComponentCode"]),
+                # u"ClassNbr": unicode(object["ClassNbr"]),
+                u"CourseTitle": unicode(object["CourseTitle"]),
+                u"InstructionModecode": unicode(object["InstructionModecode"]),
+                # u"MeetingPatternNbr": unicode(object["MeetingPatternNbr"]),
+                u"StartHour": unicode(object["StartHour"]),
+                u"StartMin": unicode(object["StartMin"]),
+                u"StartSecond": unicode(object["StartSecond"]),
+                # u"ClassStartTime": unicode(object["ClassStartTime"]),
+                u"EndHour": unicode(object["EndHour"]),
+                u"EndMin": unicode(object["EndMin"]),
+                u"EndSecond": unicode(object["EndSecond"]),
+                # u"ClassEndTime": unicode(object["ClassEndTime"]),
+                u"Mon": unicode(object["Mon"]),
+                u"Tues": unicode(object["Tues"]),
+                u"Wed": unicode(object["Wed"]),
+                u"Thurs": unicode(object["Thurs"]),
+                u"Fri": unicode(object["Fri"]),
+                u"Sat": unicode(object["Sat"]),
+                u"Sun": unicode(object["Sun"]),
+                u"StartDD": unicode(object["StartDD"]),
+                u"StartMM": unicode(object["StartMM"]),
+                u"StartYYYY": unicode(object["StartYYYY"]),
+                # u"StartDate(DD-MM-YYYY)": unicode(object["StartDate(DD-MM-YYYY)"]),
+                u"EndDD": unicode(object["EndDD"]),
+                u"EndMM": unicode(object["EndMM"]),
+                u"EndYYYY": unicode(object["EndYYYY"])
+                # u"EndDate(DD-MM-YYYY)": unicode(object["EndDate(DD-MM-YYYY)"])
+            }
+            # }
+        }
+
+        allCoursesNLabs[courseKey][u"Sections"].update(tempDict)
+        # dict(allCoursesNLabs[courseKey][u"Sections"]).pop("null", None)
+        allCoursesNLabs[courseKey][u"Sections"].pop("null", None)
+
+        # print type((unicode(object[unicode("TermDescr")]).replace(" ","-")))
+        # print unicode(object[unicode("TermDescr")]).replace(" ","-")
+
+    ref_semester.update({
+            "Winter-2019": allCoursesNLabs
+        # unicode(object[unicode("TermDescr")]).replace(" ", "-"): allCoursesNLabs
+    })
+
+    pause = 0
+    return
+
+
 def storeIEEELABDetails(ref):
     labTag = "B204"
     labTag = labTag.upper()
@@ -434,11 +535,7 @@ def datamodel(db):
 
 
 def initializeDatabase():
-    # ================  Local Test paths - comment out before moving to the server  ===============
-    # privateKeyPath = "engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json"
-    # csvFilePath = "labSchedulesRevised.csv"
-    # jsonFilePath = "openDataParsing.json"
-    # ================  Test paths - comment out before moving to the server  ===============
+    debug = False
 
     # =============== Actual server paths =======================================
     privateKeyPath = "/opt/testFlaskApp/engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json"
@@ -446,25 +543,39 @@ def initializeDatabase():
     jsonFilePath = "/opt/testFlaskApp/results/openDataParsing.json"
     # =============== Actual server paths =======================================
 
+    if debug:
+        # ================  Local Test paths - comment out before moving to the server  ===============
+        privateKeyPath = "engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json"
+        csvFilePath = "labSchedulesRevised.csv"
+        jsonFilePath = "openDataParsing.json"
+        # ================  Test paths - comment out before moving to the server  ===============
+
     # Initialize the app database
     # ref = connectAndCreateBlankCollectionAndDB(default_app, privateKeyPath)
     ref = connectAndCreateBlankCollectionAndDB(privateKeyPath)
     # ref = db.reference('/')
+
+    # courseWithLabs is used to save the Courses with sections and labs as details
+    saveCoursesWithLabs2DB(ref, jsonFilePath, privateKeyPath)
+
+    # return
 
     # Parse the CSV to JSON
     generateJSONfromCSV(csvFilePath, jsonFilePath)
     # Adding the list of labs that doesn't have classes during the semester to the same document
     addAlwaysAvailableLabs(ref)
     # Parse the JSON to Dictionaries and Store it in the database
-    saveJson2Db(ref, jsonFilePath, privateKeyPath)
+    saveCurrentSemesterCoursesNDynamicData2DB(ref, jsonFilePath, privateKeyPath)
     # Save IEEE as a Lab in the database
     storeIEEELABDetails(ref)
     # TestPrint
     # datamodel(db)
 
+
 # ***** Main ******
 # initializeDatabase()
 # ***** END ******
+
 
 # ================================================================================
 #                      END ---  Initialize database

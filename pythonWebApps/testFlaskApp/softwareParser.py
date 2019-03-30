@@ -164,12 +164,6 @@ def convertingDataFromList2Dict(SoftwareAndClassList, softLabDict):
     # pause = 0
     return softLabDict
 
-
-
-
-
-
-
 def softwareParsingMain():
     fileName = 'input.txt'
     file = open(fileName, 'r')

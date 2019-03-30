@@ -193,10 +193,10 @@ def serverSideComputationTest(numberOfPeople):
 # ***** Main ******
 # serverSideComputation()
 
-privateKeyPath = "engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json"
-dynamicDataDict, ref = dynamicDataDictFunc(privateKeyPath)
-calculateTotalCapacity(privateKeyPath, dynamicDataDict, ref)
-calculateTotalNumberOfStudents(privateKeyPath, dynamicDataDict, ref)
+# privateKeyPath = "engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json"
+# dynamicDataDict, ref = dynamicDataDictFunc(privateKeyPath)
+# calculateTotalCapacity(privateKeyPath, dynamicDataDict, ref)
+# calculateTotalNumberOfStudents(privateKeyPath, dynamicDataDict, ref)
 # storeSoftwareLabs2DB(privateKeyPath)
 
 
