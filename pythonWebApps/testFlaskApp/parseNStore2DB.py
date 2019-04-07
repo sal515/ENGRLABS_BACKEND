@@ -140,7 +140,7 @@ def generateJSONfromCSV(csvFilePath, jsonFilePath):
 
 
 # Reference: https://linuxconfig.org/how-to-parse-data-from-json-into-python
-def saveCurrentSemesterCoursesNDynamicData2DB(ref, jsonFilePath, privateKeyPath):
+def saveCurrentSemesterLabsNDynamicData2DB(ref, jsonFilePath, privateKeyPath):
     # ================== Building object to save to databse =============================
 
     # parsing the json document to a dict
@@ -179,7 +179,7 @@ def saveCurrentSemesterCoursesNDynamicData2DB(ref, jsonFilePath, privateKeyPath)
                         u"LocationCode": unicode(item["LocationCode"]),
                         # u'timestamp': firestore.SERVER_TIMESTAMP
                     },
-                    unicode("CurrentSemesterCourses"):
+                    unicode("CurrentSemesterLabs"):
                         {
                             unicode(unicode(item["Subject"]) + unicode(item["CatalogNbr"])): {}
                         }
@@ -243,7 +243,7 @@ def saveCurrentSemesterCoursesNDynamicData2DB(ref, jsonFilePath, privateKeyPath)
         # if labKeys exit in the allLabsWithCoursesDict,
         # update the courses dict in the  allLabsWithCoursesDict with the courses in the temp dict
         if labKeys in allLabsWithCoursesDict:
-            allLabsWithCoursesDict[labKeys][u"CurrentSemesterCourses"].update(tempLabDict[labKeys])
+            allLabsWithCoursesDict[labKeys][u"CurrentSemesterLabs"].update(tempLabDict[labKeys])
 
     # ================== Saving built object to databse =============================
 
@@ -267,7 +267,7 @@ def saveCurrentSemesterCoursesNDynamicData2DB(ref, jsonFilePath, privateKeyPath)
                 })
 
     # creating a collection and a document with the lab key tag
-    doc_ref = ref.child('PUBLIC_DATA/CurrentSemesterCourses')
+    doc_ref = ref.child('PUBLIC_DATA/CurrentSemesterLabs')
 
     # loop through every lab key and saving that lab to database - current semester courses
     for key in labKeys:
@@ -278,7 +278,7 @@ def saveCurrentSemesterCoursesNDynamicData2DB(ref, jsonFilePath, privateKeyPath)
                 # print(type(key))
                 ### doc_ref.set({
                 doc_ref.update({
-                    unicode(key): allLabsWithCoursesDict[key]["CurrentSemesterCourses"]
+                    unicode(key): allLabsWithCoursesDict[key]["CurrentSemesterLabs"]
                 })
 
 
@@ -373,7 +373,7 @@ def saveCoursesWithLabs2DB(ref, jsonFilePath, privateKeyPath):
         # print unicode(object[unicode("TermDescr")]).replace(" ","-")
 
     ref_semester.update({
-            "Winter-2019": allCoursesNLabs
+            "CurrentSemesterCourses": allCoursesNLabs
         # unicode(object[unicode("TermDescr")]).replace(" ", "-"): allCoursesNLabs
     })
 
@@ -470,7 +470,7 @@ def addAlwaysAvailableLabs(ref):
     ]
 
     # creating a collection and a document with the lab key tag
-    CurrentSemesterCoursesDOC = ref.child('PUBLIC_DATA/CurrentSemesterCourses')
+    CurrentSemesterLabsDOC = ref.child('PUBLIC_DATA/CurrentSemesterLabs')
     DynamicDataDOC = ref.child('PUBLIC_DATA/DynamicData')
 
     for item in alwaysAvailableLabs:
@@ -516,7 +516,7 @@ def addAlwaysAvailableLabs(ref):
 
         })
 
-        CurrentSemesterCoursesDOC.update({
+        CurrentSemesterLabsDOC.update({
             unicode(labTag): {}
         })
 
@@ -565,7 +565,7 @@ def initializeDatabase():
     # Adding the list of labs that doesn't have classes during the semester to the same document
     addAlwaysAvailableLabs(ref)
     # Parse the JSON to Dictionaries and Store it in the database
-    saveCurrentSemesterCoursesNDynamicData2DB(ref, jsonFilePath, privateKeyPath)
+    saveCurrentSemesterLabsNDynamicData2DB(ref, jsonFilePath, privateKeyPath)
     # Save IEEE as a Lab in the database
     storeIEEELABDetails(ref)
     # TestPrint
