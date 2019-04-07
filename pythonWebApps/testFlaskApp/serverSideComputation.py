@@ -227,10 +227,10 @@ def updateUpcommingClass():
     currentTimeMin = currentTimeInMinutes(currentDT.hour, currentDT.minute)
 
     # FIXME : Comment out the current time
-    # currentTimeMin = 800
-
     # FIXME: Comment the current day below
+    # currentTimeMin = 800
     # currentDayLetter = "Tuesday"
+
 
     coursesTodayDict = {}
     coursesTodayList = []
@@ -452,6 +452,17 @@ def updateUpcommingClass():
     # refreshing the data after saving the upcoming classes
     dynamicData = ref_DynamicData.get()
     dynamicLabList = dynamicData.keys()
+
+
+    # RESETTING all the values of the availibility to true and the upcoming time is reset
+    for lab in dynamicLabList:
+        ref_DynamicDataRoomCode = ref.child('PUBLIC_DATA/DynamicData/' + lab)
+        ref_DynamicDataRoomCode.update({
+            unicode("LabAvailable"): "true",
+            unicode("UpcomingClassTime"): -1
+            # unicode("LabAvailable"): dict2Save.get(lab).get("Available")
+        })
+
     for lab in dynamicLabList:
         upcomingArray = dynamicData.get(lab).get("UpcommingClass")
         # if (not len(list(upcomingArray)) > 1) and not (dict(upcomingArray[0]).get("UpcommingClassCheck")) == -1:
@@ -542,6 +553,8 @@ def updateUpcommingClass():
     # print "Second: " + str(currentDT.second)
 
 
+
+# FIXME :::
 # ***** Main ******
 # serverSideComputation()
 
