@@ -272,6 +272,9 @@ def detectPeople():
     # call save2DB()
     # detectionHelper.grabImage_objectDetection_save()
     grabImage_objectDetection_save()
+
+
+
     return render_template('home.html', varString="Detection Complete")
 
 

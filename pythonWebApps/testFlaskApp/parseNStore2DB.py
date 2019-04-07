@@ -160,11 +160,11 @@ def saveCurrentSemesterLabsNDynamicData2DB(ref, jsonFilePath, privateKeyPath):
             labKeys:
                 {
                     unicode(unicode("DynamicData")): {
-                        u"NumberOfStudentsPresent": unicode("Sensor Not Installed"),
-                        u"LabAvailable": unicode("Sensor Not Installed"),
-                        u"Temperature": unicode("Sensor Not Installed"),
+                        u"NumberOfStudentsPresent": unicode("?"),
+                        u"LabAvailable": unicode("?"),
+                        u"Temperature": unicode("?"),
                         u"TotalCapacity": unicode(item["EstimatedCapacity"]),
-                        u"AvailableSpots": unicode("Sensor Not Installed"),
+                        u"AvailableSpots": unicode("?"),
                         u"UpcommingClass": {
                             unicode("Subject"): unicode("SubjectVal"),
                             unicode("Category"): unicode("CategoryVal"),
@@ -402,11 +402,11 @@ def storeIEEELABDetails(ref):
     doc_ref.update({
 
         unicode(labTag): {
-            u"NumberOfStudentsPresent": unicode("Sensor Not Installed"),
-            u"LabAvailable": unicode("Sensor Not Installed"),
-            u"Temperature": unicode("Sensor Not Installed"),
+            u"NumberOfStudentsPresent": unicode("?"),
+            u"LabAvailable": unicode("?"),
+            u"Temperature": unicode("?"),
             u"TotalCapacity": unicode(10),
-            u"AvailableSpots": unicode("Sensor Not Installed"),
+            u"AvailableSpots": unicode("?"),
             u"UpcommingClass": {
                 unicode("Subject"): unicode("NA"),
                 unicode("Category"): unicode("NA"),
@@ -494,11 +494,11 @@ def addAlwaysAvailableLabs(ref):
 
             unicode(labTag): {
 
-                u"NumberOfStudentsPresent": unicode("Sensor Not Installed"),
+                u"NumberOfStudentsPresent": unicode("?"),
                 u"LabAvailable": unicode("Available"),
-                u"Temperature": unicode("Sensor Not Installed"),
+                u"Temperature": unicode("?"),
                 u"TotalCapacity": unicode(TotalCapacity),
-                u"AvailableSpots": unicode("Sensor Not Installed"),
+                u"AvailableSpots": unicode("?"),
                 u"UpcommingClass": {
                     unicode("Subject"): unicode("NA"),
                     unicode("Category"): unicode("NA"),

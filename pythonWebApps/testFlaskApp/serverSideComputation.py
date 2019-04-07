@@ -5,6 +5,8 @@ from firebase_admin import credentials, db
 
 import softwareParser
 
+import datetime
+
 
 def connectAndCreateBlankCollectionAndDB(privateKeyPath):
     try:
@@ -123,8 +125,6 @@ def dynamicDataDictFunc(privateKeyPath):
         return None
 
 
-
-
 def calculateTotalCapacity(privateKeyPath, dynamicDataDict, ref):
     if dynamicDataDict is None:
         print "Error Retrieving from database"
@@ -151,6 +151,7 @@ def calculateTotalCapacity(privateKeyPath, dynamicDataDict, ref):
     # print totalCapacity
 
     debuggerPause = 0
+
 
 def calculateTotalNumberOfStudents(privateKeyPath, dynamicDataDict, ref):
     if dynamicDataDict is None:
@@ -190,6 +191,277 @@ def serverSideComputationTest(numberOfPeople):
     updateNumberOfPeopleAvailabilitySpots(numberOfPeople, privateKeyPath)
 
 
+def currentTimeInMinutes(hour, minute):
+    hour2min = hour * 60
+    return (hour2min + minute)
+
+
+def updateUpcommingClass():
+    # ================  Local Test paths - comment out before moving to the server  ===============
+    privateKeyPath = "engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json"
+    # ================  Test paths - comment out before moving to the server  ===============
+
+    # privateKeyPath = "/opt/testFlaskApp/engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json"
+
+    currentDT = datetime.datetime.now()
+
+    ref = connectAndCreateBlankCollectionAndDB(privateKeyPath)
+
+    ref_CurrentSemesterLabs = ref.child('PUBLIC_DATA/CurrentSemesterLabs')
+    ref_DynamicData = ref.child('PUBLIC_DATA/DynamicData')
+
+    # print ref_CurrentSemesterLabs.get()
+    # print ref_DynamicData.get()
+
+    currentSemesterLabsDic = ref_CurrentSemesterLabs.get()
+    dynamicData = ref_DynamicData.get()
+
+    dynamicLabList = dynamicData.keys()
+
+    # currentSemesterLabsDic.keys()
+
+    currentDayLetter = currentDT.strftime("%A")
+    currentTimeMin = currentTimeInMinutes(currentDT.hour, currentDT.minute)
+
+    # TODO: Comment the current day below
+    currentDayLetter = "Tuesday"
+
+    coursesTodayDict = {}
+    coursesTodayList = []
+    labCoursesTodayMap = {}
+    availability = "false"
+
+    for lab in dynamicLabList:
+        # labCoursesTodayMap.clear()
+        labCoursesTodayMap = {}
+
+
+        if dict(currentSemesterLabsDic).has_key(lab):
+            coursesList = currentSemesterLabsDic.get(lab).keys()
+            for course in coursesList:
+
+                startTimeStr =  "StartTime: " + str(currentTimeInMinutes(int(currentSemesterLabsDic.get(lab).get(course).get("StartHour")), int(currentSemesterLabsDic.get(lab).get(course).get("StartMin"))))
+                endTimeStr = "EndTime: " + str(currentTimeInMinutes(int(currentSemesterLabsDic.get(lab).get(course).get("EndHour")),int(currentSemesterLabsDic.get(lab).get(course).get("EndMin"))))
+
+                startTime =  (currentTimeInMinutes(int(currentSemesterLabsDic.get(lab).get(course).get("StartHour")), int(currentSemesterLabsDic.get(lab).get(course).get("StartMin"))))
+                endTime = (currentTimeInMinutes(int(currentSemesterLabsDic.get(lab).get(course).get("EndHour")),int(currentSemesterLabsDic.get(lab).get(course).get("EndMin"))))
+                # upcommingClassTimeInMin =
+
+
+                # startTime = 780
+                # endTime = 840
+
+                if int(startTime) <= int(currentTimeMin) <= int(endTime):
+                    availability = "false"
+                else:
+                    availability = "true"
+
+
+                if currentSemesterLabsDic.get(lab).get(course).get("Mon") == "Y" and currentDayLetter == "Monday":
+                    print lab + " - " + course + " - " + "Monday"
+                    # print currentSemesterLabsDic.get(lab).get(course).get("StartHour")
+                    # print currentSemesterLabsDic.get(lab).get(course).get("StartMin")
+                    #
+                    # print startTimeStr
+                    # print endTimeStr
+                    # print "availability: " + availability
+                    # print  currentTimeMin
+
+                    labCoursesTodayMap = {}
+
+                    labCoursesTodayMap.update({"RoomCode": lab})
+                    labCoursesTodayMap.update({"Course" : course})
+                    labCoursesTodayMap.update({"startTimeMin": startTime})
+                    labCoursesTodayMap.update({"endTimeMin": endTime})
+                    labCoursesTodayMap.update({"Available": availability})
+                    labCoursesTodayMap.update({"UpcommingClassTimeInMinutes": availability})
+
+
+                    # print labCoursesTodayMap
+
+                    coursesTodayList.append(labCoursesTodayMap)
+                    coursesTodayDict.update({lab: labCoursesTodayMap})
+                    # coursesTodayDict.update({lab: labCoursesTodayMap})
+
+                elif currentSemesterLabsDic.get(lab).get(course).get("Tues") == "Y" and currentDayLetter == "Tuesday":
+                    print lab + " - " + course + " - " + "Tuesday"
+
+                    labCoursesTodayMap = {}
+
+                    labCoursesTodayMap.update({"RoomCode": lab})
+                    labCoursesTodayMap.update({"Course" : course})
+                    labCoursesTodayMap.update({"startTimeMin": startTime})
+                    labCoursesTodayMap.update({"endTimeMin": endTime})
+                    labCoursesTodayMap.update({"Available": availability})
+                    labCoursesTodayMap.update({"UpcommingClassTimeInMinutes": availability})
+
+
+                    # print labCoursesTodayMap
+
+                    # coursesTodayDict.append(course)
+                    coursesTodayList.append(labCoursesTodayMap)
+                    coursesTodayDict.update({lab: labCoursesTodayMap})
+
+
+                elif currentSemesterLabsDic.get(lab).get(course).get("Wed") == "Y" and currentDayLetter == "Wednesday":
+                    print lab + " - " + course + " - " + "Wednesday"
+
+                    labCoursesTodayMap = {}
+
+                    labCoursesTodayMap.update({"RoomCode": lab})
+                    labCoursesTodayMap.update({"Course" : course})
+                    labCoursesTodayMap.update({"startTimeMin": startTime})
+                    labCoursesTodayMap.update({"endTimeMin": endTime})
+                    labCoursesTodayMap.update({"Available": availability})
+                    labCoursesTodayMap.update({"UpcommingClassTimeInMinutes": availability})
+
+
+                    # print labCoursesTodayMap
+
+                    # coursesTodayDict.append(course)
+                    coursesTodayList.append(labCoursesTodayMap)
+                    coursesTodayDict.update({lab: labCoursesTodayMap})
+
+                elif currentSemesterLabsDic.get(lab).get(course).get("Thurs") == "Y" and currentDayLetter == "Thursday":
+                    print lab + " - " + course + " - " + "Thurs"
+
+                    labCoursesTodayMap = {}
+
+                    labCoursesTodayMap.update({"RoomCode": lab})
+                    labCoursesTodayMap.update({"Course" : course})
+                    labCoursesTodayMap.update({"startTimeMin": startTime})
+                    labCoursesTodayMap.update({"endTimeMin": endTime})
+                    labCoursesTodayMap.update({"Available": availability})
+                    labCoursesTodayMap.update({"UpcommingClassTimeInMinutes": availability})
+
+
+                    # print labCoursesTodayMap
+
+                    # coursesTodayDict.append(course)
+                    coursesTodayList.append(labCoursesTodayMap)
+                    coursesTodayDict.update({lab: labCoursesTodayMap})
+
+                elif currentSemesterLabsDic.get(lab).get(course).get("Friday") == "Y" and currentDayLetter == "Friday":
+                    print lab + " - " + course + " - " + "Friday"
+
+                    labCoursesTodayMap = {}
+
+                    labCoursesTodayMap.update({"RoomCode": lab})
+                    labCoursesTodayMap.update({"Course" : course})
+                    labCoursesTodayMap.update({"startTimeMin": startTime})
+                    labCoursesTodayMap.update({"endTimeMin": endTime})
+                    labCoursesTodayMap.update({"Available": availability})
+                    labCoursesTodayMap.update({"UpcommingClassTimeInMinutes": availability})
+
+
+                    # print labCoursesTodayMap
+
+                    # coursesTodayDict.append(course)
+                    coursesTodayList.append(labCoursesTodayMap)
+                    coursesTodayDict.update({lab: labCoursesTodayMap})
+
+                elif currentSemesterLabsDic.get(lab).get(course).get(
+                        "Saturday") == "Y" and currentDayLetter == "Saturday":
+                    print lab + " - " + course + " - " + "Saturday"
+
+                    labCoursesTodayMap = {}
+
+                    labCoursesTodayMap.update({"RoomCode": lab})
+                    labCoursesTodayMap.update({"Course" : course})
+                    labCoursesTodayMap.update({"startTimeMin": startTime})
+                    labCoursesTodayMap.update({"endTimeMin": endTime})
+                    labCoursesTodayMap.update({"Available": availability})
+                    labCoursesTodayMap.update({"UpcommingClassTimeInMinutes": availability})
+
+
+                    # print labCoursesTodayMap
+
+                    # coursesTodayDict.append(course)
+                    coursesTodayList.append(labCoursesTodayMap)
+                    coursesTodayDict.update({lab: labCoursesTodayMap})
+
+                elif currentSemesterLabsDic.get(lab).get(course).get("Sun") == "Y" and currentDayLetter == "Sunday":
+                    print lab + " - " + course + " - " + "Sunday"
+
+                    labCoursesTodayMap = {}
+
+                    labCoursesTodayMap.update({"RoomCode": lab})
+                    labCoursesTodayMap.update({"Course" : course})
+                    labCoursesTodayMap.update({"startTimeMin": startTime})
+                    labCoursesTodayMap.update({"endTimeMin": endTime})
+                    labCoursesTodayMap.update({"Available": availability})
+                    labCoursesTodayMap.update({"UpcommingClassTimeInMinutes": availability})
+
+
+                    # print labCoursesTodayMap
+
+                    # coursesTodayDict.append(course)
+                    coursesTodayList.append(labCoursesTodayMap)
+                    coursesTodayDict.update({lab: labCoursesTodayMap})
+
+        else:
+            print lab + " - Available"
+
+    # print coursesTodayList
+    # print coursesTodayDict
+
+    # the keys of the labs that has class today
+    coursesTodayInLabsList = coursesTodayDict.keys()
+
+    dict2Save = {}
+    tempSaveArr = []
+
+    for scheduleObj in coursesTodayList:
+        tempSaveArr=[]
+        # print scheduleObj
+        if not dict2Save.has_key( scheduleObj.get("RoomCode")):
+            tempSaveArr.append(scheduleObj)
+            dict2Save.update({scheduleObj.get("RoomCode"): tempSaveArr})
+
+        else:
+            tempSaveArr = dict2Save.get(scheduleObj.get("RoomCode"))
+            tempSaveArr.append(scheduleObj)
+            dict2Save.update({scheduleObj.get("RoomCode"): tempSaveArr})
+
+
+    print dict2Save
+
+
+    for lab in dynamicLabList:
+        if dict2Save.has_key(lab):
+            print 'PUBLIC_DATA/DynamicData/' + lab
+            ref_DynamicDataRoomCode = ref.child('PUBLIC_DATA/DynamicData/' + lab)
+
+            ref_DynamicDataRoomCode.update({
+                unicode("UpcommingClass"): dict2Save.get(lab),
+                # unicode("LabAvailable"): dict2Save.get(lab).get("Available")
+            })
+
+        # else:
+            
+
+
+
+    # upcommingClassDict = (dynamicData.get(lab).get("UpcommingClass"))
+    # upcommingClassStartMin = (dynamicData.get(lab).get("UpcommingClass").get("StartMin"))
+
+    # for lab in dynamicLabList:
+    #     print(dynamicData.get(lab).get("UpcommingClass").get("StartMin"))
+
+    # print ("Year: " + str(currentDT.year))
+    # print "Month: " + str(currentDT.month)
+    # print "Day: " + str(currentDT.day)
+    # The following code gives the day in words
+    # print "Day: " + str(currentDT.strftime("%A"))
+
+    # print "Hour: " + str(currentDT.hour)
+    # print "Minute: " + str(currentDT.minute)
+    # print "Second: " + str(currentDT.second)
+
+
+
+
+
 # ***** Main ******
 # serverSideComputation()
 
@@ -198,6 +470,6 @@ def serverSideComputationTest(numberOfPeople):
 # calculateTotalCapacity(privateKeyPath, dynamicDataDict, ref)
 # calculateTotalNumberOfStudents(privateKeyPath, dynamicDataDict, ref)
 # storeSoftwareLabs2DB(privateKeyPath)
-
+updateUpcommingClass()
 
 # ***** END ******
