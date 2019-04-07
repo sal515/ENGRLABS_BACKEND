@@ -199,11 +199,12 @@ def currentTimeInMinutes(hour, minute):
 
 
 def updateUpcommingClass():
+    # FIXME: TEST STUff
     # ================  Local Test paths - comment out before moving to the server  ===============
-    privateKeyPath = "engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json"
+    # privateKeyPath = "engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json"
     # ================  Test paths - comment out before moving to the server  ===============
 
-    # privateKeyPath = "/opt/testFlaskApp/engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json"
+    privateKeyPath = "/opt/testFlaskApp/engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json"
 
     currentDT = datetime.datetime.now()
 
@@ -226,10 +227,10 @@ def updateUpcommingClass():
     currentTimeMin = currentTimeInMinutes(currentDT.hour, currentDT.minute)
 
     # FIXME : Comment out the current time
-    currentTimeMin = 800
+    # currentTimeMin = 800
 
     # FIXME: Comment the current day below
-    currentDayLetter = "Tuesday"
+    # currentDayLetter = "Tuesday"
 
     coursesTodayDict = {}
     coursesTodayList = []
@@ -529,8 +530,6 @@ def updateUpcommingClass():
                     })
 
 
-    # for lab in dynamicLabList:
-    #     print(dynamicData.get(lab).get("UpcommingClass").get("StartMin"))
 
     # print ("Year: " + str(currentDT.year))
     # print "Month: " + str(currentDT.month)
@@ -551,6 +550,8 @@ def updateUpcommingClass():
 # calculateTotalCapacity(privateKeyPath, dynamicDataDict, ref)
 # calculateTotalNumberOfStudents(privateKeyPath, dynamicDataDict, ref)
 # storeSoftwareLabs2DB(privateKeyPath)
-updateUpcommingClass()
+
+
+# updateUpcommingClass()
 
 # ***** END ******

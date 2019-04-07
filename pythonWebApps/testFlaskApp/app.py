@@ -273,6 +273,8 @@ def detectPeople():
     # detectionHelper.grabImage_objectDetection_save()
     grabImage_objectDetection_save()
 
+    # updating the database with Upcoming class time data
+    serverSideComputation.updateUpcommingClass()
 
 
     return render_template('home.html', varString="Detection Complete")
