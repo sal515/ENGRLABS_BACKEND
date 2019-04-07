@@ -536,6 +536,7 @@ def datamodel(db):
 
 def initializeDatabase():
     debug = False
+    # debug = True
 
     # =============== Actual server paths =======================================
     privateKeyPath = "/opt/testFlaskApp/engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json"

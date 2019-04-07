@@ -7,6 +7,8 @@ import softwareParser
 
 import datetime
 
+from operator import itemgetter, attrgetter, methodcaller
+
 
 def connectAndCreateBlankCollectionAndDB(privateKeyPath):
     try:
@@ -223,39 +225,45 @@ def updateUpcommingClass():
     currentDayLetter = currentDT.strftime("%A")
     currentTimeMin = currentTimeInMinutes(currentDT.hour, currentDT.minute)
 
-    # TODO: Comment the current day below
+    # FIXME : Comment out the current time
+    currentTimeMin = 800
+
+    # FIXME: Comment the current day below
     currentDayLetter = "Tuesday"
 
     coursesTodayDict = {}
     coursesTodayList = []
     labCoursesTodayMap = {}
-    availability = "false"
+    availability = "true"
 
     for lab in dynamicLabList:
         # labCoursesTodayMap.clear()
         labCoursesTodayMap = {}
 
-
         if dict(currentSemesterLabsDic).has_key(lab):
             coursesList = currentSemesterLabsDic.get(lab).keys()
             for course in coursesList:
 
-                startTimeStr =  "StartTime: " + str(currentTimeInMinutes(int(currentSemesterLabsDic.get(lab).get(course).get("StartHour")), int(currentSemesterLabsDic.get(lab).get(course).get("StartMin"))))
-                endTimeStr = "EndTime: " + str(currentTimeInMinutes(int(currentSemesterLabsDic.get(lab).get(course).get("EndHour")),int(currentSemesterLabsDic.get(lab).get(course).get("EndMin"))))
+                startTimeStr = "StartTime: " + str(
+                    currentTimeInMinutes(int(currentSemesterLabsDic.get(lab).get(course).get("StartHour")),
+                                         int(currentSemesterLabsDic.get(lab).get(course).get("StartMin"))))
+                endTimeStr = "EndTime: " + str(
+                    currentTimeInMinutes(int(currentSemesterLabsDic.get(lab).get(course).get("EndHour")),
+                                         int(currentSemesterLabsDic.get(lab).get(course).get("EndMin"))))
 
-                startTime =  (currentTimeInMinutes(int(currentSemesterLabsDic.get(lab).get(course).get("StartHour")), int(currentSemesterLabsDic.get(lab).get(course).get("StartMin"))))
-                endTime = (currentTimeInMinutes(int(currentSemesterLabsDic.get(lab).get(course).get("EndHour")),int(currentSemesterLabsDic.get(lab).get(course).get("EndMin"))))
+                startTime = (currentTimeInMinutes(int(currentSemesterLabsDic.get(lab).get(course).get("StartHour")),
+                                                  int(currentSemesterLabsDic.get(lab).get(course).get("StartMin"))))
+                endTime = (currentTimeInMinutes(int(currentSemesterLabsDic.get(lab).get(course).get("EndHour")),
+                                                int(currentSemesterLabsDic.get(lab).get(course).get("EndMin"))))
                 # upcommingClassTimeInMin =
-
 
                 # startTime = 780
                 # endTime = 840
 
-                if int(startTime) <= int(currentTimeMin) <= int(endTime):
-                    availability = "false"
-                else:
-                    availability = "true"
-
+                # if int(startTime) <= int(currentTimeMin) <= int(endTime):
+                #     availability = "false"
+                # else:
+                #     availability = "true"
 
                 if currentSemesterLabsDic.get(lab).get(course).get("Mon") == "Y" and currentDayLetter == "Monday":
                     print lab + " - " + course + " - " + "Monday"
@@ -270,12 +278,11 @@ def updateUpcommingClass():
                     labCoursesTodayMap = {}
 
                     labCoursesTodayMap.update({"RoomCode": lab})
-                    labCoursesTodayMap.update({"Course" : course})
+                    labCoursesTodayMap.update({"Course": course})
                     labCoursesTodayMap.update({"startTimeMin": startTime})
                     labCoursesTodayMap.update({"endTimeMin": endTime})
                     labCoursesTodayMap.update({"Available": availability})
-                    labCoursesTodayMap.update({"UpcommingClassTimeInMinutes": availability})
-
+                    labCoursesTodayMap.update({"UpcommingClassCheck": availability})
 
                     # print labCoursesTodayMap
 
@@ -289,12 +296,11 @@ def updateUpcommingClass():
                     labCoursesTodayMap = {}
 
                     labCoursesTodayMap.update({"RoomCode": lab})
-                    labCoursesTodayMap.update({"Course" : course})
+                    labCoursesTodayMap.update({"Course": course})
                     labCoursesTodayMap.update({"startTimeMin": startTime})
                     labCoursesTodayMap.update({"endTimeMin": endTime})
                     labCoursesTodayMap.update({"Available": availability})
-                    labCoursesTodayMap.update({"UpcommingClassTimeInMinutes": availability})
-
+                    labCoursesTodayMap.update({"UpcommingClassCheck": availability})
 
                     # print labCoursesTodayMap
 
@@ -309,12 +315,11 @@ def updateUpcommingClass():
                     labCoursesTodayMap = {}
 
                     labCoursesTodayMap.update({"RoomCode": lab})
-                    labCoursesTodayMap.update({"Course" : course})
+                    labCoursesTodayMap.update({"Course": course})
                     labCoursesTodayMap.update({"startTimeMin": startTime})
                     labCoursesTodayMap.update({"endTimeMin": endTime})
                     labCoursesTodayMap.update({"Available": availability})
-                    labCoursesTodayMap.update({"UpcommingClassTimeInMinutes": availability})
-
+                    labCoursesTodayMap.update({"UpcommingClassCheck": availability})
 
                     # print labCoursesTodayMap
 
@@ -328,12 +333,11 @@ def updateUpcommingClass():
                     labCoursesTodayMap = {}
 
                     labCoursesTodayMap.update({"RoomCode": lab})
-                    labCoursesTodayMap.update({"Course" : course})
+                    labCoursesTodayMap.update({"Course": course})
                     labCoursesTodayMap.update({"startTimeMin": startTime})
                     labCoursesTodayMap.update({"endTimeMin": endTime})
                     labCoursesTodayMap.update({"Available": availability})
-                    labCoursesTodayMap.update({"UpcommingClassTimeInMinutes": availability})
-
+                    labCoursesTodayMap.update({"UpcommingClassCheck": availability})
 
                     # print labCoursesTodayMap
 
@@ -347,12 +351,11 @@ def updateUpcommingClass():
                     labCoursesTodayMap = {}
 
                     labCoursesTodayMap.update({"RoomCode": lab})
-                    labCoursesTodayMap.update({"Course" : course})
+                    labCoursesTodayMap.update({"Course": course})
                     labCoursesTodayMap.update({"startTimeMin": startTime})
                     labCoursesTodayMap.update({"endTimeMin": endTime})
                     labCoursesTodayMap.update({"Available": availability})
-                    labCoursesTodayMap.update({"UpcommingClassTimeInMinutes": availability})
-
+                    labCoursesTodayMap.update({"UpcommingClassCheck": availability})
 
                     # print labCoursesTodayMap
 
@@ -367,12 +370,11 @@ def updateUpcommingClass():
                     labCoursesTodayMap = {}
 
                     labCoursesTodayMap.update({"RoomCode": lab})
-                    labCoursesTodayMap.update({"Course" : course})
+                    labCoursesTodayMap.update({"Course": course})
                     labCoursesTodayMap.update({"startTimeMin": startTime})
                     labCoursesTodayMap.update({"endTimeMin": endTime})
                     labCoursesTodayMap.update({"Available": availability})
-                    labCoursesTodayMap.update({"UpcommingClassTimeInMinutes": availability})
-
+                    labCoursesTodayMap.update({"UpcommingClassCheck": availability})
 
                     # print labCoursesTodayMap
 
@@ -386,12 +388,11 @@ def updateUpcommingClass():
                     labCoursesTodayMap = {}
 
                     labCoursesTodayMap.update({"RoomCode": lab})
-                    labCoursesTodayMap.update({"Course" : course})
+                    labCoursesTodayMap.update({"Course": course})
                     labCoursesTodayMap.update({"startTimeMin": startTime})
                     labCoursesTodayMap.update({"endTimeMin": endTime})
                     labCoursesTodayMap.update({"Available": availability})
-                    labCoursesTodayMap.update({"UpcommingClassTimeInMinutes": availability})
-
+                    labCoursesTodayMap.update({"UpcommingClassCheck": availability})
 
                     # print labCoursesTodayMap
 
@@ -412,9 +413,9 @@ def updateUpcommingClass():
     tempSaveArr = []
 
     for scheduleObj in coursesTodayList:
-        tempSaveArr=[]
+        tempSaveArr = []
         # print scheduleObj
-        if not dict2Save.has_key( scheduleObj.get("RoomCode")):
+        if not dict2Save.has_key(scheduleObj.get("RoomCode")):
             tempSaveArr.append(scheduleObj)
             dict2Save.update({scheduleObj.get("RoomCode"): tempSaveArr})
 
@@ -423,13 +424,15 @@ def updateUpcommingClass():
             tempSaveArr.append(scheduleObj)
             dict2Save.update({scheduleObj.get("RoomCode"): tempSaveArr})
 
+    # print dict2Save
 
-    print dict2Save
+    # currentTimeMin = 800
 
+    calculateTimeForUpcomingClass = -1;
 
     for lab in dynamicLabList:
         if dict2Save.has_key(lab):
-            print 'PUBLIC_DATA/DynamicData/' + lab
+            # print 'PUBLIC_DATA/DynamicData/' + lab
             ref_DynamicDataRoomCode = ref.child('PUBLIC_DATA/DynamicData/' + lab)
 
             ref_DynamicDataRoomCode.update({
@@ -437,13 +440,94 @@ def updateUpcommingClass():
                 # unicode("LabAvailable"): dict2Save.get(lab).get("Available")
             })
 
-        # else:
-            
+        else:
+            ref_DynamicDataRoomCode = ref.child('PUBLIC_DATA/DynamicData/' + lab)
 
+            ref_DynamicDataRoomCode.update({
+                unicode("UpcommingClass"): [{"Available": "true", 'UpcommingClassCheck': -1}],
+                # unicode("LabAvailable"): dict2Save.get(lab).get("Available")
+            })
 
+    # refreshing the data after saving the upcoming classes
+    dynamicData = ref_DynamicData.get()
+    dynamicLabList = dynamicData.keys()
+    for lab in dynamicLabList:
+        upcomingArray = dynamicData.get(lab).get("UpcommingClass")
+        # if (not len(list(upcomingArray)) > 1) and not (dict(upcomingArray[0]).get("UpcommingClassCheck")) == -1:
 
-    # upcommingClassDict = (dynamicData.get(lab).get("UpcommingClass"))
-    # upcommingClassStartMin = (dynamicData.get(lab).get("UpcommingClass").get("StartMin"))
+        # looking at labs that has labs
+        if not (dict(upcomingArray[0]).get("UpcommingClassCheck")) == -1:
+            # print len(list(upcomingArray))
+            # print dynamicData.get(lab).get("UpcommingClass")
+
+            # print upcomingArray
+            # for schedule in upcomingArray:
+            #     print schedule
+
+            # print sorted(upcomingArray, key = lambda i: i["startTimeMin"], reverse=False)
+            sortedArray = sorted(upcomingArray, key=lambda i: i["startTimeMin"], reverse=False)
+            sortedArrayLength = len(sortedArray)
+            # print sortedArrayLength
+
+            sortedCounter = 0
+            upcomingBusyIndex = -1
+            #
+            for sortedElement in sortedArray:
+                sortedCounter = sortedCounter + 1
+                # print sortedCounter
+                # if sortedArrayLength == sortedCounter:
+                #     print "lastElement"
+                # else:
+                #     print "Elements left"
+
+                # calculating the ongoing class
+                if int(sortedElement.get("startTimeMin")) <= int(currentTimeMin) <= int(
+                        sortedElement.get("endTimeMin")):
+                    # print sortedElement
+
+                    upcomingBusyIndex = sortedCounter
+
+                    ref_DynamicDataRoomCode = ref.child('PUBLIC_DATA/DynamicData/' + lab)
+                    ref_DynamicDataRoomCode.update({
+                        unicode("LabAvailable"): "false"
+                        # unicode("LabAvailable"): dict2Save.get(lab).get("Available")
+                    })
+
+                    refreshUpcomingArrRef = ref.child('PUBLIC_DATA/DynamicData/' + lab + "/UpcommingClass")
+                    refreshUpcomingArr = refreshUpcomingArrRef.get()
+
+                    # print refreshUpcomingArr
+                    # print len(refreshUpcomingArr)
+
+                    for element in refreshUpcomingArr:
+                        # print element
+                        element.update({"Available": "false"})
+                        # element.update()
+
+                    # print refreshUpcomingArr
+
+                    ref_DynamicDataRoomCode.update({
+                        unicode("UpcommingClass"): refreshUpcomingArr
+                        # unicode("LabAvailable"): dict2Save.get(lab).get("Available")
+                    })
+
+                else:
+                    ref_DynamicDataRoomCode = ref.child('PUBLIC_DATA/DynamicData/' + lab)
+                    ref_DynamicDataRoomCode.update({
+                        unicode("LabAvailable"): "true"
+                        # unicode("LabAvailable"): dict2Save.get(lab).get("Available")
+                    })
+
+                # calculating the upcoming class
+                if sortedCounter == upcomingBusyIndex + 1:
+                    calculateTimeForUpcomingClass = int(sortedElement.get("startTimeMin")) - currentTimeMin
+
+                    ref_DynamicDataRoomCode.update({
+                        unicode("LabAvailable"): "false",
+                        unicode("UpcomingClassTime"): calculateTimeForUpcomingClass
+                        # unicode("LabAvailable"): dict2Save.get(lab).get("Available")
+                    })
+
 
     # for lab in dynamicLabList:
     #     print(dynamicData.get(lab).get("UpcommingClass").get("StartMin"))
@@ -457,9 +541,6 @@ def updateUpcommingClass():
     # print "Hour: " + str(currentDT.hour)
     # print "Minute: " + str(currentDT.minute)
     # print "Second: " + str(currentDT.second)
-
-
-
 
 
 # ***** Main ******
