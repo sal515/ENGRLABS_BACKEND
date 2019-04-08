@@ -11,12 +11,15 @@ from picamera import PiCamera
 import time
 import datetime
 
+# FIXME
+# import temperatureScript
+
 directory = "/home/pi/object-detection-tensorFlow-openData/"
 
 
 def captureImage():
     camera = PiCamera()
-    camera.resolution = (2592, 1944)
+    # camera.resolution = (2592, 1944)
     camera.capture(str(directory) + 'image.jpg')
 
 
@@ -75,12 +78,24 @@ try:
 
     logger("Started")
 
-    captureImage()
-    connect2FirebaseStorageAndSave()
-    processingTime = callServer()
+    # FIXME
 
-    # processingTime = "25"
-    logger(("Ended - took " + processingTime + " s"))
+    # # updating the temperature of B204
+    # temperatureScript.temperatureReading()
+
+    # capturing image and storing it to the cloud storage
+    captureImage()
+
+    # FIXME
+
+    # connect2FirebaseStorageAndSave()
+    # processingTime = callServer()
+    #
+    #
+    #
+    #
+    # # processingTime = "25"
+    # logger(("Ended - took " + processingTime + " s"))
 
 except:
     logger(-1)
