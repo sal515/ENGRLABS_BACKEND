@@ -299,5 +299,12 @@ def upcomingClassTime():
     return render_template('home.html', varString="Test Data loaded to db for ---> Tuesday at 820 min of the day")
 
 
+@app.route('/admin/generateSoftWaresForLabs')
+def softwaresForLabs():
+    privateKeyPath = "/opt/testFlaskApp/engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json"
+    serverSideComputation.storeLabSoftware2DB(privateKeyPath)
+    return render_template('home.html', varString="Generated software list")
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80, debug=False)

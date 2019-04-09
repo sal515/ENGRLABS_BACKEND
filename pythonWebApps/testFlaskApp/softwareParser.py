@@ -164,6 +164,26 @@ def convertingDataFromList2Dict(SoftwareAndClassList, softLabDict):
     # pause = 0
     return softLabDict
 
+
+def getSoftwareFromLab(SoftwareAndClassList, softwareForLabDict):
+    for tempIndex in SoftwareAndClassList:
+        arr = []
+        tempIndex.softwareName = str(tempIndex.softwareName).replace(".", "_")
+        tempIndex.classFloor = (str(tempIndex.classFloor).lstrip("0"))
+
+        if (str(tempIndex.classBuilding) + str(tempIndex.classFloor) + str(tempIndex.classRoom)) not in softwareForLabDict:
+            arr = [tempIndex]
+            # tempIndex.classRoom = (str(tempIndex.classRoom).lstrip("0"))
+            softwareForLabDict.update({(str(tempIndex.classBuilding) + str(tempIndex.classFloor) + str(tempIndex.classRoom)): arr})
+        else:
+            arr = softwareForLabDict.get((str(tempIndex.classBuilding) + str(tempIndex.classFloor) + str(tempIndex.classRoom)))
+            tempIndex.classFloor = (str(tempIndex.classFloor).lstrip("0"))
+            # tempIndex.classRoom = (str(tempIndex.classRoom).lstrip("0"))
+            arr.append(tempIndex)
+
+    return softwareForLabDict
+
+
 def softwareParsingMain():
     fileName = '/opt/testFlaskApp/input.txt'
     file = open(fileName, 'r')
@@ -189,8 +209,42 @@ def softwareParsingMain():
 
     # tester = 10
 
+
+
     softLabDict = {}
     return convertingDataFromList2Dict(SoftwareAndClassList, softLabDict)
+
+
+def LabParsingMain():
+    # fileName = 'input.txt'
+    fileName = '/opt/testFlaskApp/input.txt'
+    file = open(fileName, 'r')
+    sourceCode = file.read()
+
+    debug = False
+    outputView = False
+    # printTester = True
+    printTester = False
+
+    parsingStep1(sourceCode, debug)
+
+    parsingStep2(debug)
+
+    SoftwareAndClassList = []
+
+    parsingStep3(SoftwareAndClassList, debug, outputView)
+
+    if printTester:
+        for tempIndex in SoftwareAndClassList:
+            print(
+                    'Software Name: ' + tempIndex.softwareName + ' Building: ' + tempIndex.classBuilding + ' Floor: ' + tempIndex.classFloor + ' ClassNumber: ' + tempIndex.classRoom)
+
+    # tester = 10
+
+
+
+    softLabDict = {}
+    return getSoftwareFromLab(SoftwareAndClassList, softLabDict)
 
 
 # Calling the main function

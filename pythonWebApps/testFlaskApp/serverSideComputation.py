@@ -68,6 +68,35 @@ def updateNumberOfPeopleAvailabilitySpots(numberOfPeople, privateKeyPath):
     })
 
 
+def storeLabSoftware2DB(privateKeyPath):
+    ref = connectAndCreateBlankCollectionAndDB(privateKeyPath)
+    ref_labs = ref.child('PUBLIC_DATA/Labs')
+
+    softwareForLabDict = softwareParser.LabParsingMain()
+
+    softwareForLabDictKeys = dict(softwareForLabDict).keys()
+
+    for softwareForLabDictKey in softwareForLabDictKeys:
+        listOfSoftwares = list((dict(softwareForLabDict).get(softwareForLabDictKey)))
+
+        ref_labs.update({
+            unicode(str(softwareForLabDictKey)): {
+                "Softwares": {}
+            }
+        })
+
+        ref_softwares = ref.child('PUBLIC_DATA/Labs/' + str(softwareForLabDictKey) + "/" + "Softwares")
+        for software in listOfSoftwares:
+            ref_softwares.update({
+                unicode(str(software.softwareName)): {
+                    #     unicode("Room"): unicode(str(lab.classFloor) + str(lab.classRoom)),
+                    #     unicode("RoomCode"): unicode(str(lab.classBuilding) + str(lab.classFloor) + str(lab.classRoom)),
+                    #     unicode("BuildingCode"): unicode(str(lab.classBuilding)),
+                    unicode(str(software.softwareName)): ""
+                }
+            })
+
+
 def storeSoftwareLabs2DB(privateKeyPath):
     softLabDict = softwareParser.softwareParsingMain()
 
@@ -230,7 +259,6 @@ def updateUpcommingClass():
     # FIXME: Comment the current day below
     # currentTimeMin = 800
     # currentDayLetter = "Tuesday"
-
 
     coursesTodayDict = {}
     coursesTodayList = []
@@ -453,7 +481,6 @@ def updateUpcommingClass():
     dynamicData = ref_DynamicData.get()
     dynamicLabList = dynamicData.keys()
 
-
     # RESETTING all the values of the availibility to true and the upcoming time is reset
     for lab in dynamicLabList:
         ref_DynamicDataRoomCode = ref.child('PUBLIC_DATA/DynamicData/' + lab)
@@ -540,8 +567,6 @@ def updateUpcommingClass():
                         # unicode("LabAvailable"): dict2Save.get(lab).get("Available")
                     })
 
-
-
     # print ("Year: " + str(currentDT.year))
     # print "Month: " + str(currentDT.month)
     # print "Day: " + str(currentDT.day)
@@ -552,8 +577,6 @@ def updateUpcommingClass():
     # print "Minute: " + str(currentDT.minute)
     # print "Second: " + str(currentDT.second)
 
-
-
 # FIXME :::
 # ***** Main ******
 # serverSideComputation()
@@ -563,6 +586,7 @@ def updateUpcommingClass():
 # calculateTotalCapacity(privateKeyPath, dynamicDataDict, ref)
 # calculateTotalNumberOfStudents(privateKeyPath, dynamicDataDict, ref)
 # storeSoftwareLabs2DB(privateKeyPath)
+# storeLabSoftware2DB(privateKeyPath)
 
 
 # updateUpcommingClass()

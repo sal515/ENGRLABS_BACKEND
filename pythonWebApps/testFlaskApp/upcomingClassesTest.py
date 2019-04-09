@@ -62,7 +62,8 @@ def updateUpcommingClass():
 
     # FIXME : Comment out the current time
     # FIXME: Comment the current day below
-    currentTimeMin = 820
+    # currentTimeMin = 820
+    currentTimeMin = 940
     currentDayLetter = "Tuesday"
 
 
