@@ -20,6 +20,8 @@ import serverSideComputation
 # importing software parsing script
 import softwareParser
 
+import upcomingClassesTest
+
 app = Flask(__name__)
 
 # ================================================================================
@@ -290,6 +292,11 @@ def initializeDB():
     privateKeyPath = "/opt/testFlaskApp/engrlabs-10f0c-firebase-adminsdk-oswwf-ebef7d1bf1.json"
     serverSideComputation.storeSoftwareLabs2DB(privateKeyPath)
     return render_template('home.html', varString="Database Initialization Complete")
+
+@app.route('/admin/upcomingClassTimeTest')
+def upcomingClassTime():
+    upcomingClassesTest.updateUpcommingClass()
+    return render_template('home.html', varString="Test Data loaded to db for ---> Tuesday at 820 min of the day")
 
 
 if __name__ == '__main__':
