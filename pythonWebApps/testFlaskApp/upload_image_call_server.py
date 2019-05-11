@@ -11,13 +11,15 @@ from picamera import PiCamera
 import time
 import datetime
 
+# FIXME
+# import temperatureScript
+
 directory = "/home/pi/object-detection-tensorFlow-openData/"
 
 
 def captureImage():
     camera = PiCamera()
-    # camera.resolution = (640, 480)
-    camera.resolution = (2592, 1944)
+    # camera.resolution = (2592, 1944)
     camera.capture(str(directory) + 'image.jpg')
 
 
@@ -46,10 +48,7 @@ def connect2FirebaseStorageAndSave():
 
 def callServer():
     t0 = time.time()
-    # r = requests.get('http://34.73.44.43')
     r = requests.get('http://34.73.44.43/rpi/detectPeople')
-    # print(r.content)
-    # print(r.status_code)
     t1 = time.time()
     # print("total time : " + str(t1 - t0) + "s")
     return (str(t1 - t0) + "s")
@@ -74,19 +73,29 @@ def logger(processingDetails):
         outfile.write(str(datetime.datetime.now().time()) + " " + str(processingDetails) + "\n")
 
 
-
-
 # # ------- main --------------------
 try:
 
     logger("Started")
 
-    captureImage()
-    connect2FirebaseStorageAndSave()
-    processingTime = callServer()
+    # FIXME
 
-    # processingTime = "25"
-    logger(("Ended - took " + processingTime + " s"))
+    # # updating the temperature of B204
+    # temperatureScript.temperatureReading()
+
+    # capturing image and storing it to the cloud storage
+    captureImage()
+
+    # FIXME
+
+    # connect2FirebaseStorageAndSave()
+    # processingTime = callServer()
+    #
+    #
+    #
+    #
+    # # processingTime = "25"
+    # logger(("Ended - took " + processingTime + " s"))
 
 except:
     logger(-1)
