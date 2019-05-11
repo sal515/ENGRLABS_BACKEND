@@ -28,7 +28,7 @@ def temperatureReading():
     # RESISTOR = 8740
     # RESISTOR = 5780
     # RESISTOR = 2890
-    RESISTOR = 2550
+    RESISTOR = 2700
     # Create differential input between channel 0 and 1
     # chan = AnalogIn(ads, ADS.P0, ADS.P1)
     # print("{:>5}\t{:>5}".format('raw', 'v'))
@@ -41,9 +41,10 @@ def temperatureReading():
         try:
             # 	Vout = Vin * (R2/R1+R1)
             # 	find resistance of thermistor using adc reading.  Simple resistor divider, solving for R1 using	  	R2 = 2890
-            resistor = (((4095.0) / (chan.value)) - 1) * RESISTOR
-            # solve for temperature using 		1/T = (1/To) + (1/B)*ln(R/Ro)
-
+            reading = ((1023 - chan.value)/1023)*4095
+            # print(str(chan.value) + "  " + str(reading))
+            resistor = (((4095.0) / (reading)) - 1) * RESISTOR
+            # solve for temperature using 		1/T = (1/To) + (1/B)*ln(R/Ro)adc 1015
             # print ("resistor " + str(resistor))
 
             steinhart = resistor / THERMISTORNOMINAL
@@ -53,7 +54,7 @@ def temperatureReading():
             steinhart = 1 / steinhart
             steinhart = steinhart - 273.15
 
-            print ("Every Iteration Output: " + str(steinhart))
+            # print ("Every Iteration Output: " + str(steinhart))
             values.append(steinhart)
 
             if counter == numberOfValues:
@@ -62,7 +63,7 @@ def temperatureReading():
                     steinhart = steinhart + value
 
                 steinhart = steinhart / numberOfValues
-                print("The Average Value: " + str(steinhart) + " C")
+                # print("The Average Value: " + str(steinhart) + " C")
                 save2db(round(steinhart, 2))
                 break
                 values = []
@@ -99,9 +100,9 @@ def save2db(temperature):
         u"Temperature": str(temperature)
     })
 
-    print("dbcalled")
+    # print("dbcalled")
 
 
 # FIXME
 # ### Testing only
-# temperatureReading()
+temperatureReading()
