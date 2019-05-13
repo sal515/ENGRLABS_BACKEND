@@ -105,4 +105,5 @@ def save2db(temperature):
 
 # FIXME
 # ### Testing only
-temperatureReading()
+while(True):
+  temperatureReading()

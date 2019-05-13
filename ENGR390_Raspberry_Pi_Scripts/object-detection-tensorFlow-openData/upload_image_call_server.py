@@ -19,7 +19,7 @@ directory = "/home/pi/object-detection-tensorFlow-openData/"
 
 def captureImage():
     camera = PiCamera()
-    # camera.resolution = (2592, 1944)
+    camera.resolution = (2592, 1944)
     camera.capture(str(directory) + 'image.jpg')
 
 
@@ -88,8 +88,8 @@ try:
 
     # FIXME
 
-    # connect2FirebaseStorageAndSave()
-    # processingTime = callServer()
+    connect2FirebaseStorageAndSave()
+    processingTime = callServer()
     #
     #
     #
